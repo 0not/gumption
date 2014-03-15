@@ -1,0 +1,25 @@
+<nav class="navbar navbar-default" ng-controller="NavbarCtrl">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">Gumption</a>
+		</div>
+		<div class="collapse navbar-collapse" id="navbar-collapse-1">
+			<ul class="nav navbar-nav text-right" role="navigation" data-toggle="collapse" data-target="#navbar-collapse-1">
+				<li><a href="#/dashboard">Dash</a></li>
+				<li>
+					<a href="#/todo" class="navbar-link">
+						<span class="badge">{{num_tasks}}</span>
+						Tasks
+					</a>
+				</li>
+				<li><a href="#/track">Tracker</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>

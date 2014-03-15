@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="gumption">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Gumption Time Manager</title>
+		<link href="css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+		<link href="css/main.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<ng-include src="'partials/nav.html'"></ng-include>
+		
+		<div class="container">
+			<div ng-view></div>
+		</div>
+		<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+		<script src="js/vendor/bootstrap.js"></script>
+		<script src="js/vendor/angular.js"></script>
+		<script src="js/vendor/angular-route.js"></script>
+		<script src="js/vendor/angular-touch.js"></script>
+		<!--<script src="js/vendor/ui-bootstrap-tpls-0.10.0.js"></script>-->
+		<script src="js/controllers.js"></script>
+	</body>
+</html>
