@@ -2,8 +2,8 @@ var gumption = angular.module('gumption', ['ngRoute', 'ngTouch']);
 
 ///////////////////////////////////////
 
-gumption.service('shareService', function() {
-	this.num_tasks = function () {
+gumption.service('shareService', ['$rootScope', function($rootScope) {
+    this.update_num_tasks = function () {
 		var num = 0;
 		if (localStorage.hasOwnProperty("tasks")) {
 			var tasks = JSON.parse(localStorage.tasks);
@@ -13,9 +13,13 @@ gumption.service('shareService', function() {
 			}
 		}
 		
-		return num;
+        $rootScope.$broadcast('num_tasks_updated', num);
+
+        return num;
 	};
-});
+
+	this.num_tasks = this.update_num_tasks();
+}]);
 
 ///////////////////////////////////////
 
@@ -24,7 +28,14 @@ gumption.config(['$routeProvider', function($routeProvider) {
 	when('/todo', {
 		templateUrl: 'partials/todo.html',
 		controller: 'TodoCtrl'
-	});
+	}).
+    when('/dash', {
+        templateUrl: 'partials/dash.html',
+        controller: 'DashCtrl'
+    }).
+    otherwise({
+        redirectTo: '/dash'
+    });
 }]);
 
 ////////////////////////////////////////
@@ -50,9 +61,16 @@ gumption.directive('checkmark', function() {
 ///////////////////////////////////////
 
 gumption.controller('NavbarCtrl', ['$scope', 'shareService', function ($scope, shareService) {
-	$scope.num_tasks = shareService.num_tasks();
+	$scope.num_tasks = shareService.num_tasks;
+
+    $scope.$on('num_tasks_updated', function(event, num_tasks) {
+        $scope.num_tasks = num_tasks;
+    });
 }]);
 
+gumption.controller('DashCtrl', ['$scope', 'shareService', function ($scope, shareService) {
+    
+}]);
 gumption.controller('TodoCtrl', ['$scope', 'shareService', function ($scope, shareService) {
 	var empty_task = function () { 
 		return {
@@ -77,6 +95,7 @@ gumption.controller('TodoCtrl', ['$scope', 'shareService', function ($scope, sha
 	
 	$scope.save = function() {
 		localStorage.setItem("tasks", JSON.stringify($scope.tasks));
+        shareService.update_num_tasks();
 	}
 	
 
