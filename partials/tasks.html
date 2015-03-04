@@ -1,0 +1,55 @@
+<div class="text-right text-large">
+	<a href="" class="" ng-click="add()">
+		<span class="glyphicon glyphicon-plus"></span>
+	</a>
+</div>
+
+<div class="panel-group" id="tasks-accordion">
+	<div class="panel panel-default" ng-repeat="task in tasks track by $index">
+		<div class="panel-heading tasks">
+			<h4 class="panel-title">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox" ng-model="task.completed" />
+                    </span>
+                    <input type="text" ng-model="task.name" placeholder="Remember to..." class="form-control"/>
+                    <span class="input-group-addon">
+                        <a 
+                            data-toggle="collapse" 
+                            data-parent="#tasks-accordion" 
+                            href="#collapse-{{$index}}" 
+                            target="_self"
+                                                    >
+                            <span 
+                                class="glyphicon"
+                                ng-click="change($index)"
+                                ng-class="{'glyphicon-chevron-down': !task.editing, 'glyphicon-chevron-up': task.editing}"
+                            ></span>
+                        </a>
+                    </span>
+                </div>
+			</h4>
+		</div>
+		<div id="collapse-{{$index}}" class="panel-collapse collapse">
+			<div class="panel-body">
+				<p class="text-right text-danger">
+					<span class="glyphicon glyphicon-trash" ng-click="remove($index)"></span>
+				</p>
+				<textarea class="form-control" ng-model="task.details"></textarea>
+			</div>
+			<div class="panel-body">
+				Reminder
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="panel-group" id="tasks-accordion">
+	<div class="panel panel-default" ng-hide="tasks">
+		<div class="panel-heading">
+			<h4 class="panel-title">
+				Nothing to do!
+			</h4>
+		</div>
+	</div>
+</div>

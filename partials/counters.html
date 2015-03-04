@@ -14,8 +14,17 @@
                     </span>
                     <input type="text" ng-model="task.name" placeholder="Remember to..." class="form-control"/>
                     <span class="input-group-addon">
-                        <a data-toggle="collapse" data-parent="#tasks-accordion" href="#collapse-{{$index}}" target="_self">
-                            <span class="glyphicon glyphicon-arrow-down pull-right"></span>
+                        <a 
+                            data-toggle="collapse" 
+                            data-parent="#tasks-accordion" 
+                            href="#collapse-{{$index}}" 
+                            target="_self"
+                                                    >
+                            <span 
+                                class="glyphicon"
+                                ng-click="change($index)"
+                                ng-class="{'glyphicon-chevron-down': !task.editing, 'glyphicon-chevron-up': task.editing}"
+                            ></span>
                         </a>
                     </span>
                 </div>

@@ -25,13 +25,17 @@ gumption.service('shareService', ['$rootScope', function($rootScope) {
 
 gumption.config(['$routeProvider', function($routeProvider) {	
 	$routeProvider.
-	when('/todo', {
-		templateUrl: 'partials/todo.html',
-		controller: 'TodoCtrl'
+	when('/tasks', {
+		templateUrl: 'partials/tasks.html',
+		controller: 'TasksCtrl'
 	}).
     when('/dash', {
         templateUrl: 'partials/dash.html',
         controller: 'DashCtrl'
+    }).    
+    when('/counters', {
+        templateUrl: 'partials/counters.html',
+        controller: 'CountersCtrl'
     }).
     otherwise({
         redirectTo: '/dash'
@@ -71,17 +75,21 @@ gumption.controller('NavbarCtrl', ['$scope', 'shareService', function ($scope, s
 gumption.controller('DashCtrl', ['$scope', 'shareService', function ($scope, shareService) {
     
 }]);
-gumption.controller('TodoCtrl', ['$scope', 'shareService', function ($scope, shareService) {
-	var empty_task = function () { 
+
+gumption.controller('TasksCtrl', ['$scope', 'shareService', function ($scope, shareService) {
+    var empty_task = function () { 
 		return {
 			name: '',
 			details: '',
 			due: '',
 			reminders: [],
-			completed: false
+			completed: false,
+            editing: false
 		};
 	}
 	
+    $scope.active_task = -1;
+
 	$scope.get = function() {
 		var tasks = [];
 		
@@ -118,9 +126,23 @@ gumption.controller('TodoCtrl', ['$scope', 'shareService', function ($scope, sha
 		
 		$scope.tasks.splice(index, 1);
 	}
+
+    // Toggle which task is active
+    $scope.toggle = function(index) {
+        console.log($scope.tasks[index]);
+        // console.log($scope.active_task);
+        // if ($scope.active_task >= 0 && $scope.active_task < $scope.tasks.length) {
+        //     $scope.tasks[$scope.active_task].editing = false;
+        // }
+
+        if (index >= 0 && index < $scope.tasks.length) {
+            $scope.tasks[index].editing = !$scope.tasks[index].editing;
+            //$scope.active_task = index;
+        }
+    }
 	
 	// Pass in task index
-	$scope.toggle = function(index) {
+	$scope.complete = function(index) {
 		if (typeof index == "undefined")
 			return false;
 		
@@ -131,7 +153,89 @@ gumption.controller('TodoCtrl', ['$scope', 'shareService', function ($scope, sha
 			return false;
 		
 		$scope.tasks[index].completed = !$scope.tasks[index].completed;
-		console.log($scope.tasks[index].completed);
+	}
+	
+	// Save when leaving controller or on page unload
+	$scope.$on("$destroy", $scope.save);
+	window.addEventListener('beforeunload', $scope.save);
+}]);
+
+gumption.controller('CountersCtrl', ['$scope', 'shareService', function ($scope, shareService) {
+    var empty_counter = function () { 
+		return {
+			name: '',
+			details: '',
+			due: '',
+			reminders: [],
+			completed: false,
+            editing: false
+		};
+	}
+	
+
+	$scope.get = function() {
+		var tasks = [];
+		
+		if (localStorage.hasOwnProperty("tasks"))
+			tasks = JSON.parse(localStorage.getItem("tasks"));
+			
+		return tasks;
+	}
+	
+	$scope.tasks = $scope.get();
+	
+	$scope.save = function() {
+		localStorage.setItem("tasks", JSON.stringify($scope.tasks));
+        shareService.update_num_tasks();
+	}
+	
+
+	
+	$scope.add = function() {
+		$scope.tasks.push(empty_task());
+		$scope.save();
+	}
+	
+	// Pass in task index
+	$scope.remove = function(index) {
+		if (typeof index == "undefined")
+			return false;
+		
+		if (typeof index == "string")
+			index = parseInt(index)
+			
+		if (index >= $scope.tasks.length)
+			return false;
+		
+		$scope.tasks.splice(index, 1);
+	}
+
+    // Toggle which task is active
+    $scope.toggle = function(index) {
+        console.log($scope.tasks[index]);
+        // console.log($scope.active_task);
+        // if ($scope.active_task >= 0 && $scope.active_task < $scope.tasks.length) {
+        //     $scope.tasks[$scope.active_task].editing = false;
+        // }
+
+        if (index >= 0 && index < $scope.tasks.length) {
+            $scope.tasks[index].editing = !$scope.tasks[index].editing;
+            //$scope.active_task = index;
+        }
+    }
+	
+	// Pass in task index
+	$scope.complete = function(index) {
+		if (typeof index == "undefined")
+			return false;
+		
+		if (typeof index == "string")
+			index = parseInt(index)
+			
+		if (index >= $scope.tasks.length)
+			return false;
+		
+		$scope.tasks[index].completed = !$scope.tasks[index].completed;
 	}
 	
 	// Save when leaving controller or on page unload
